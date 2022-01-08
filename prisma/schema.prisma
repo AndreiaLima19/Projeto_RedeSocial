@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tweet {
+  id            Int                  @id @default(autoincrement())
+  content       String               @db.VarChar(140)
+  userid        Int
+  createdAt     DateTime             @default(now()) @map("created_at")
+  user          User                 @relation(fields: [userid], references: [id])
+  categories    CategoriesOnTweets[]
+  favoriteTweet FavoriteTweet[]
+}
+
+model Category {
+  id        Int                  @id @default(autoincrement())
+  name      String
+  createdAt DateTime             @default(now()) @map("created_at")
+  tweet     CategoriesOnTweets[]
+}
+
+model Follower {
+  id        Int      @id @default(autoincrement())
+  name      String
+  userid    Int
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userid], references: [id])
+}
+
+model Following {
+  id        Int      @id @default(autoincrement())
+  name      String
+  userid    Int
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userid], references: [id])
+}
+
+model User {
+  id            Int             @id @default(autoincrement())
+  name          String
+  lastname      String
+  username      String          @unique
+  password      String
+  about         String
+  birthday      String
+  createdAt     DateTime        @default(now()) @map("created_at")
+  favoriteTweet FavoriteTweet[]
+  follower      Follower[]
+  following     Following[]
+  tweet         Tweet[]
+}
+
+model CategoriesOnTweets {
+  tweetid    Int
+  categoryid Int
+  assignedAt DateTime @default(now())
+  assignedBy String
+  category   Category @relation(fields: [categoryid], references: [id])
+  tweet      Tweet    @relation(fields: [tweetid], references: [id])
+  @@id([tweetid, categoryid])
+}
+
+model FavoriteTweet {
+  tweetid    Int
+  userid     Int
+  assignedAt DateTime @default(now())
+  assignedBy String
+  tweet      Tweet    @relation(fields: [tweetid], references: [id])
+  user       User     @relation(fields: [userid], references: [id])
+  @@id([tweetid, userid])
+}
