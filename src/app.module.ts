@@ -9,6 +9,7 @@ import { TweetModule } from './tweet/tweet.module';
 import { UserModule } from './user/user.module';
 import { CategoriesontweetsModule } from './categoriesontweets/categoriesontweets.module';
 import { FavoritesonusersModule } from './favoritesonusers/favoritesonusers.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { FavoritesonusersModule } from './favoritesonusers/favoritesonusers.modu
     UserModule,
     CategoriesontweetsModule,
     FavoritesonusersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
